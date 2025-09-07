@@ -1,0 +1,9 @@
+[general]
+regex-style-search = true
+ignore = body-min-length
+
+[title-max-length]
+line-length = 75
+
+[title-match-regex]
+regex = ^(feat|fix|chore|docs|refactor|test)

@@ -1,0 +1,6 @@
+repos:
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.19.1  # Use the version that matches your installed Gitlint version
+    hooks:
+      - id: gitlint
+        stages: [commit-msg]

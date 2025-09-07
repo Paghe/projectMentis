@@ -18,3 +18,8 @@ Invalid:
     feat: add login endpoint     # ❌ missing scope
     foo(api): something          # ❌ type not allowed
 Body (optional): max 72 chars per line.
+
+Dependencies:
+    pre-commit
+    gitlint
+    golangci-lint

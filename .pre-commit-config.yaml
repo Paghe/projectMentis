@@ -6,11 +6,7 @@ repos:
         stages: [commit-msg]
 
   - repo: https://github.com/golangci/golangci-lint
-    rev: v1.54.2  # use the version you want
+    rev: v2.4.0
     hooks:
       - id: golangci-lint
-        name: golangci-lint
-        entry: golangci-lint run
-        language: system  # assumes golangci-lint is installed on your system
-        types: [go]
-        files: \.go$
+        args: [--timeout=5m]

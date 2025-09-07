@@ -1,0 +1,16 @@
+repos:
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.19.1  # Use the version that matches your installed Gitlint version
+    hooks:
+      - id: gitlint
+        stages: [commit-msg]
+
+  - repo: https://github.com/golangci/golangci-lint
+    rev: v1.54.2  # use the version you want
+    hooks:
+      - id: golangci-lint
+        name: golangci-lint
+        entry: golangci-lint run
+        language: system  # assumes golangci-lint is installed on your system
+        types: [go]
+        files: \.go$

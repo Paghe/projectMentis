@@ -26,3 +26,9 @@ Dependencies:
 
 pre-commit clean 
 pre-commit install --install-hooks  
+
+# to start the mongo db
+brew services start mongodb/brew/mongodb-community
+
+# to stop the mongo db
+brew services stop mongodb/brew/mongodb-community

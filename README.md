@@ -23,3 +23,6 @@ Dependencies:
     pre-commit
     gitlint
     golangci-lint
+
+pre-commit clean 
+pre-commit install --install-hooks  

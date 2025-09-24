@@ -8,7 +8,9 @@ import (
 
 // SetupRoutes configures all the routes for the application.
 func SetupRoutes(router *gin.Engine) {
-	router.GET("/task", handlers.CreateTask)
-	router.POST("/task", handlers.EditTask)
-	router.PUT("/task", handlers.DeleteTask)
+	router.GET("/task/:userId", handlers.ListTasks)
+	router.POST("/task", handlers.CreateTask)
+	router.PUT("/task/:userId/:taskId", handlers.EditTask)
+	router.DELETE("/task/:userId/:taskId", handlers.DeleteTask)
+	// router.POST("/task", handlers.EditTask)
 }

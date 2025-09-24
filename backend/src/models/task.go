@@ -6,4 +6,5 @@ type Task struct {
 	ID        string `json:"id" bson:"_id,omitempty"`
 	Title     string `json:"title" bson:"title"`
 	Completed bool   `json:"completed" bson:"completed"`
+	UserID    string `json:"userId" bson:"userId"`
 }

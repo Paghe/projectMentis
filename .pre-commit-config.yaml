@@ -1,12 +1,17 @@
+# This file references the actual pre-commit configuration in the config directory
+# The actual configuration is in: backend/src/config/.pre-commit-config.yaml
+
 repos:
-  - repo: https://github.com/jorisroovers/gitlint
-    rev: v0.19.1  # Use the version that matches your installed Gitlint version
+  - repo: local
     hooks:
       - id: gitlint
+        name: gitlint
+        entry: sh -c 'gitlint --config=backend/src/config/.gitlint "$@"' --
+        language: system
         stages: [commit-msg]
 
   - repo: https://github.com/golangci/golangci-lint
     rev: v2.4.0
     hooks:
       - id: golangci-lint
-        args: [--timeout=5m]
+        args: [--timeout=5m, --config=backend/src/config/.golangci.yml]

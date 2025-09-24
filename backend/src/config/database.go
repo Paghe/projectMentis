@@ -3,20 +3,35 @@ package config
 
 import (
 	"context"
-
+	"time"
+	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// DB is the global database connection for the Mentis application.
-var DB *mongo.Database
+// Client is the global MongoDB client for the application.
+var Client *mongo.Client
 
-// ConnectDB establishes a connection to the MongoDB database.
-func ConnectDB() {
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://localhost:27017"))
+// DBname is the name of the MongoDB database used in Mentis.
+const DBname = "Mentis"
+
+// ConnectMongo establishes a connection to the MongoDB database.
+func ConnectMongo(uri string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {
-		panic(err)
+		return err
 	}
+	if err = client.Ping(ctx, nil); err != nil {
+		return err
+	}
+	Client = client
+	fmt.Println("✅ Connected & pinged MongoDB")
+	return nil
+}
 
-	DB = client.Database("mentis")
+// GetCollection returns a handle to a MongoDB collection by name.
+func GetCollection(name string) *mongo.Collection {
+	return Client.Database(DBname).Collection(name)
 }

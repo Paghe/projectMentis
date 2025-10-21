@@ -14,3 +14,14 @@ type BaseStats struct {
 	Intelligence int                `json:"intelligence" bson:"intelligence"`
 	Constitution int                `json:"constitution" bson:"constitution"`
 }
+
+//NewBaseStats cunstructor for BaseStats
+func NewBaseStats() BaseStats {
+	return BaseStats{
+		Strength: 		10,           
+		Stamina:		10,
+		Dexterity:		10,
+		Intelligence:	10,
+		Constitution:	10,
+	}
+}

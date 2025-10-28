@@ -115,7 +115,44 @@ func DeleteTask(c *gin.Context) {
 
 // MarkTask handles marking a task as completed.
 func MarkTask(c *gin.Context) {
-	c.JSON(200, "Here is MarkTask")
+	id := c.Param("id")
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+	var input struct {
+		Completed	bool `json:"completed"`
+	}
+
+	if err := c.BindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	taskcollection := config.GetCollection("task")
+	update := bson.M{
+		"$set": bson.M{
+			"completed": input.Completed,
+		},
+	}
+	var updateTask models.Task
+	result := taskcollection.FindOneAndUpdate(ctx, 
+		bson.M{"_id": objID}, update, 									
+		options.FindOneAndUpdate().SetReturnDocument(options.After),
+		)
+	if err != result.Decode(&updateTask) {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Task not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"succes": true,
+		"message": "Task Updated",
+		"data": updateTask,
+	})
 }
 
 // ListTasks handles retrieving a list of tasks.

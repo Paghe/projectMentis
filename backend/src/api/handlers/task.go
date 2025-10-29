@@ -110,7 +110,27 @@ func EditTask(c *gin.Context) {
 
 // DeleteTask handles the deletion of a task.
 func DeleteTask(c *gin.Context) {
-	c.JSON(200, "Here is DeleteTask")
+	id := c.Param("id")
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid task ID"})
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5 * time.Second)
+	defer cancel()
+	res, err := config.GetCollection("task").DeleteOne(ctx,bson.M{"_id": objID})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete the task"})	
+		return
+	}
+	if res.DeletedCount == 0 {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Task not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "task deleted",
+	})
 }
 
 // MarkTask handles marking a task as completed.

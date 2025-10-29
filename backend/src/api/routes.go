@@ -13,6 +13,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.PUT("/taskmark/:id", handlers.MarkTask)
 	router.DELETE("/task/:id", handlers.DeleteTask)
 	router.POST("/users", handlers.CreateUserHandle)
+	router.GET("/tasks", handlers.ListTasks)
 	router.GET("/users", handlers.GetUsers)
 	router.GET("/users/:id", handlers.GetUserByID)
 	router.POST("/baseStats", handlers.CreateBaseStatsHandle)

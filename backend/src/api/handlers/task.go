@@ -5,7 +5,7 @@ import (
 	"context"
 	"net/http"
 	"time"
-
+	"fmt"
 	"github.com/Paghe/projectMentis/backend/src/config"
 	"github.com/Paghe/projectMentis/backend/src/models"
 	"github.com/gin-gonic/gin"
@@ -177,5 +177,29 @@ func MarkTask(c *gin.Context) {
 
 // ListTasks handles retrieving a list of tasks.
 func ListTasks(c *gin.Context) {
-	c.JSON(200, "Here is MarkTask")
+	var tasks []models.Task
+	taskCollection := config.GetCollection("task")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	result, err := taskCollection.Find(ctx, bson.M{})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H {"error": err.Error()})
+	}
+	defer func() {
+		if err := result.Close(ctx); err != nil{
+			fmt.Println("❌ Error closing cursor:", err)
+		}
+	}()
+	for result.Next(ctx) {
+		var singleTask models.Task
+		if err = result.Decode(&singleTask); err != nil{
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+		tasks = append(tasks, singleTask)
+	}
+	fmt.Println("✅ Total tasks found:", len(tasks))
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"tasks": tasks,
+	})
 }

@@ -184,6 +184,7 @@ func ListTasks(c *gin.Context) {
 	result, err := taskCollection.Find(ctx, bson.M{})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H {"error": err.Error()})
+		return
 	}
 	defer func() {
 		if err := result.Close(ctx); err != nil{
@@ -202,4 +203,28 @@ func ListTasks(c *gin.Context) {
 		"success": true,
 		"tasks": tasks,
 	})
+}
+
+//GetTaskByID handles Get /task request and return task ID
+func GetTaskByID(c *gin.Context) {
+	id := c.Param("id")
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid task ID"})
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	taskCollection := config.GetCollection("task")
+	var task models.Task
+	err = taskCollection.FindOne(ctx, bson.M{"_id": objID}).Decode(&task)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Task not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+			"success": true,
+			"message": "task found!",
+			"task": task,
+		})
 }

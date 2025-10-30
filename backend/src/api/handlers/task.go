@@ -184,6 +184,7 @@ func ListTasks(c *gin.Context) {
 	result, err := taskCollection.Find(ctx, bson.M{})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H {"error": err.Error()})
+		return
 	}
 	defer func() {
 		if err := result.Close(ctx); err != nil{

@@ -125,7 +125,7 @@ func UpdateUser(c *gin.Context) {
 	})
 }
 
-// DeleteUser delete user by its ID
+//DeleteUser delete user by its ID
 func DeleteUser(c  *gin.Context) {
 	id := c.Param("id")
 	objID, err := primitive.ObjectIDFromHex(id)

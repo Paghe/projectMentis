@@ -124,3 +124,31 @@ func UpdateUser(c *gin.Context) {
 		"data": updateUser,
 	})
 }
+
+// DeleteUser delete user by its ID
+func DeleteUser(c  *gin.Context) {
+	id := c.Param("id")
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "user ID not found"})
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	userCollection := config.GetCollection("user")
+	result, err :=  userCollection.DeleteOne(ctx, bson.M{"_id": objID})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete user"})
+		return
+	}
+	if result.DeletedCount == 0 {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "user ID not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "user deleted",
+		"data": objID,
+	})
+
+}

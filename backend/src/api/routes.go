@@ -17,6 +17,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/users", handlers.CreateUserHandle)
 	router.GET("/users", handlers.GetUsers)
 	router.GET("/users/:id", handlers.GetUserByID)
+	router.PUT("/user/:id", handlers.UpdateUser)
 	router.POST("/baseStats", handlers.CreateBaseStatsHandle)
 	router.POST("/character", handlers.CreateCharacter)
 	router.GET("/character/:id", handlers.GetCharacterByID)

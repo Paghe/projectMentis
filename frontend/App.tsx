@@ -1,33 +1,35 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Component} from 'react';
 import { Alert, Button,TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import TaskCard from './components/TaskCard';
+import { useTasks } from './hooks/useTasks'
 
-const XpRender = () => {
-  const [isXp, setIsXp] = useState(0);
-  if (isXp >= 100) {
-    setIsXp(0);
-  }
-    const onPressButton = () => {
-      setIsXp(isXp + 10);
-    };
-  return (
-    <View style={styles.container}>
-      <Text style={{color: 'orange'}}> 
-        Hello I'm an XP bar
-      </Text>
-      <TouchableOpacity onPress={onPressButton} style={styles.button}>
-        <Text style={styles.buttonText}> 10 XP </Text>
-      </TouchableOpacity>
-      <Text style= {{color:'green'}}>
-        {isXp}
-      </Text>
-    </View>
-  )
-}
+
 
 export default function App() {
+  const {data, loading, error} = useTasks();
+  if (loading) {
+    return(
+      <View style={styles.container}>
+        <Text style={{backgroundColor:"lightgreen"}}> WAITING BRUH... 🕓</Text>
+      </View>
+    );
+  }
+  if (error) {
+    return(
+      <View style={styles.container}>
+        <Text style={{backgroundColor:"lightgreen"}}> WHAT'S THAT BRUH... 🤮</Text>
+      </View>
+    );
+  }
   return (
-    <XpRender></XpRender>
+    <View style={styles.container}>
+      {data.map((task,index) => (
+        <View key={index}>
+          <TaskCard title={task.title} completed={task.completed}/>
+        </View>
+      ))}
+    </View>
   );
 }
 

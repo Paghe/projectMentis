@@ -20,6 +20,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.PUT("/user/:id", handlers.UpdateUser)
 	router.DELETE("/user/:id", handlers.DeleteUser)
 	router.POST("/baseStats", handlers.CreateBaseStatsHandle)
+	router.GET("/baseStats/:id", handlers.GetBaseStatsByID)
 	router.POST("/character", handlers.CreateCharacter)
 	router.GET("/character/:id", handlers.GetCharacterByID)
 }
